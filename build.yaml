@@ -1,0 +1,21 @@
+builders:
+  decorator_gen:
+    import: "package:decorator_gen/builder.dart"
+    builder_factories: ["decoratorBuilder"]
+    build_extensions: { ".dart": ["decorator.g.part"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
+
+targets:
+  $default:
+    builders:
+      decorator_gen:
+        enabled: true
+        options:
+          forward_object_method:
+            toString: true # Defaults to true
+            "==": true # Defaults to true
+            hashCode: true # Defaults to true
+            runtimeType: false # Defaults to false
+            noSuchMethod: false # Defaults to false
