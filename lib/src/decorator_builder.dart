@@ -57,8 +57,4 @@ class DecoratorBuilder {
 
     return buffer.toString();
   }
-
-  /// Alternative method to call() for convenience
-  @override
-  String toString() => call();
 }
