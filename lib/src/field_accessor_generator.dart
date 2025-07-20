@@ -102,11 +102,6 @@ class FieldAccessorGenerator {
       _generateFieldAccessor(buffer, field);
     }
 
-    // Generate accessors for standalone getters and setters
-    for (final accessor in allAccessors) {
-      _generateStandaloneAccessor(buffer, accessor, allFields);
-    }
-
     return buffer.toString();
   }
 
@@ -168,45 +163,6 @@ class FieldAccessorGenerator {
       buffer.writeln(
         '  set ${field.name}(${field.type} value) { $instanceName.${field.name} = value; }',
       );
-      buffer.writeln();
-    }
-  }
-
-  void _generateStandaloneAccessor(
-    StringBuffer buffer,
-    PropertyAccessorElement accessor,
-    List<FieldElement> allFields,
-  ) {
-    // Check if this accessor is NOT a synthetic accessor for a field
-    final setterName = accessor.isSetter && accessor.name.endsWith('=')
-        ? accessor.name.substring(0, accessor.name.length - 1)
-        : accessor.name;
-
-    final isFieldAccessor = allFields.any(
-      (field) =>
-          field.name == setterName &&
-          ((accessor.isGetter && field.getter == accessor) ||
-              (accessor.isSetter && field.setter == accessor)),
-    );
-
-    if (!isFieldAccessor) {
-      final instanceName = DecoratorUtils.toCamelCase(classElement.name);
-      buffer.writeln('  @override');
-
-      if (accessor.isGetter) {
-        buffer.writeln(
-          '  ${accessor.returnType} get ${accessor.name} => $instanceName.${accessor.name};',
-        );
-      } else if (accessor.isSetter) {
-        final paramType = accessor.parameters.first.type;
-        // Remove the '=' from setter name if present
-        final cleanSetterName = accessor.name.endsWith('=')
-            ? accessor.name.substring(0, accessor.name.length - 1)
-            : accessor.name;
-        buffer.writeln(
-          '  set $cleanSetterName($paramType value) { $instanceName.$cleanSetterName = value; }',
-        );
-      }
       buffer.writeln();
     }
   }

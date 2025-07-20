@@ -218,3 +218,22 @@ class ListOperators {
   int operator [](int index) => _data[index];
   void operator []=(int index, int value) => _data[index] = value;
 }
+
+@ShouldGenerate(r'''
+class UnaryMinusOperatorDecorator implements UnaryMinusOperator {
+  final UnaryMinusOperator unaryMinusOperator;
+
+  UnaryMinusOperatorDecorator({required this.unaryMinusOperator});
+
+  @override
+  UnaryMinusOperator operator -() {
+    return -unaryMinusOperator;
+  }
+}
+''')
+@Decorator()
+class UnaryMinusOperator {
+  UnaryMinusOperator operator -() {
+    return UnaryMinusOperator();
+  }
+}

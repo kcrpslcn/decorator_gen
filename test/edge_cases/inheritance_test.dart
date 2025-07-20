@@ -8,8 +8,8 @@ import 'package:source_gen_test/src/test_annotated_classes.dart';
 
 Future<void> main() async {
   final reader = await initializeLibraryReaderForDirectory(
-    'test',
-    'basic_decorator_test_library.dart',
+    'test/edge_cases',
+    'inheritance_test_library.dart',
   );
 
   initializeBuildLogTracking();
@@ -21,11 +21,6 @@ Future<void> main() async {
 }
 
 const _expectedAnnotatedTests = {
-  'EmptyClass',
-  'BasicClass',
-  'ClassWithMethods',
-  'ClassWithProperties',
-  'ClassWithConstructor',
-  'function',
-  'ClassWithStandaloneAccessors',
+  'Extender',
+  'Implementer',
 };

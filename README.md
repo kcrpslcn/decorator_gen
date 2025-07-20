@@ -1,3 +1,6 @@
+[![Pub Package](https://img.shields.io/pub/v/decorator_annotation.svg)](https://pub.dev/packages/decorator_annotation)
+[![Coverage Status](https://img.shields.io/codecov/c/github/kcrpslcn/decorator_gen/main.svg)](https://codecov.io/gh/kcrpslcn/decorator_gen)
+
 # Decorator Gen
 A Dart code generator that automatically creates the [decorator pattern] for your Dart code.
 

@@ -104,6 +104,43 @@ class ClassWithProperties {
   set writeOnlyValue(String value) {}
 }
 
+// Class with standalone getters and setters (not associated with fields)
+@ShouldGenerate(r'''
+class ClassWithStandaloneAccessorsDecorator
+    implements ClassWithStandaloneAccessors {
+  final ClassWithStandaloneAccessors classWithStandaloneAccessors;
+
+  ClassWithStandaloneAccessorsDecorator({
+    required this.classWithStandaloneAccessors,
+  });
+
+  @override
+  String get computedValue => classWithStandaloneAccessors.computedValue;
+
+  @override
+  int get dynamicCalculation => classWithStandaloneAccessors.dynamicCalculation;
+
+  @override
+  set externalSetter(String value) {
+    classWithStandaloneAccessors.externalSetter = value;
+  }
+}
+''')
+@Decorator()
+class ClassWithStandaloneAccessors {
+  // Standalone getter - computes value without a backing field
+  String get computedValue =>
+      'computed_${DateTime.now().millisecondsSinceEpoch}';
+
+  // Another standalone getter
+  int get dynamicCalculation => 42 * 2;
+
+  // Standalone setter - doesn't have a corresponding field in this class
+  set externalSetter(String value) {
+    print('Setting external value: $value');
+  }
+}
+
 // Class with constructor parameters
 @ShouldGenerate(r'''
 class ClassWithConstructorDecorator implements ClassWithConstructor {
@@ -125,3 +162,7 @@ class ClassWithConstructor {
 
   ClassWithConstructor(this.value, [this.optionalValue = 'default']);
 }
+
+@ShouldThrow('Generator can only be applied to classes.')
+@Decorator()
+void function() {}
