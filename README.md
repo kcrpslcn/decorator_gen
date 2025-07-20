@@ -1,4 +1,4 @@
-[![Pub Package](https://img.shields.io/pub/v/decorator_annotation.svg)](https://pub.dev/packages/decorator_annotation)
+[![Pub Package](https://img.shields.io/pub/v/decorator_gen.svg)](https://pub.dev/packages/decorator_gen)
 [![Coverage Status](https://img.shields.io/codecov/c/github/kcrpslcn/decorator_gen/main.svg)](https://codecov.io/gh/kcrpslcn/decorator_gen)
 
 # Decorator Gen

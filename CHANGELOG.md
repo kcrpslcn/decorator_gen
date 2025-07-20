@@ -1,3 +1,6 @@
+## 0.2.0+1
+  - Fix README pub package shield to point to `decorator_annotation` instead of `decorator_gen`
+
 ## 0.2.0
   - Require `analyzer: ^7.4.0`
   - Require `build: ^3.0.0`
