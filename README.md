@@ -1,3 +1,5 @@
+[![Pub Package](https://img.shields.io/pub/v/decorator_annotation.svg)](https://pub.dev/packages/decorator_annotation)
+
 # Decorator Gen
 A Dart code generator that automatically creates the [decorator pattern] for your Dart code.
 
