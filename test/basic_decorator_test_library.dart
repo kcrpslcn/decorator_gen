@@ -125,3 +125,7 @@ class ClassWithConstructor {
 
   ClassWithConstructor(this.value, [this.optionalValue = 'default']);
 }
+
+@ShouldThrow('Generator can only be applied to classes.')
+@Decorator()
+void function() {}

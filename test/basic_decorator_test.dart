@@ -26,4 +26,5 @@ const _expectedAnnotatedTests = {
   'ClassWithMethods',
   'ClassWithProperties',
   'ClassWithConstructor',
+  'function',
 };
