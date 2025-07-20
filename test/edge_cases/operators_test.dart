@@ -25,4 +25,5 @@ const _expectedAnnotatedTests = {
   'ComparisonOperators',
   'BitwiseOperators',
   'ListOperators',
+  'UnaryMinusOperator',
 };

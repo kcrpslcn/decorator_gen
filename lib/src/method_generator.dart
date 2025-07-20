@@ -88,8 +88,11 @@ class MethodGenerator {
       final methodPrefix =
           isOperator && !method.name.startsWith('operator') ? 'operator ' : '';
 
+      // Handle special case for unary minus operator
+      final methodName = method.name == 'unary-' ? '-' : method.name;
+
       buffer.write(
-        '  ${method.returnType} $methodPrefix${method.name}$typeParams(',
+        '  ${method.returnType} $methodPrefix$methodName$typeParams(',
       );
 
       // Generate parameters
@@ -181,6 +184,7 @@ class MethodGenerator {
           '<<',
           '>>',
           '>>>',
+          'unary-',
         ].contains(methodName);
   }
 
