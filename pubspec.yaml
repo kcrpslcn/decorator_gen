@@ -1,5 +1,5 @@
 name: decorator_gen
-version: 0.1.0
+version: 0.1.1
 description: >-
   Automatically generates code for the decorator pattern in Dart by annotating
   Dart classes.
