@@ -1,3 +1,7 @@
+## 0.1.1
+  - Fix unary- operator generation for `@Decorator()` classes
+  - increase test coverage
+
 ## 0.1.0
 
   - Generate decorator classes using the `@Decorator()` annotation
