@@ -19,3 +19,6 @@ targets:
             hashCode: true # Defaults to true
             runtimeType: false # Defaults to false
             noSuchMethod: false # Defaults to false
+        generate_for:
+          exclude:
+            - "test/**"
