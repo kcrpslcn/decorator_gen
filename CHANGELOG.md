@@ -1,3 +1,6 @@
+## 0.3.0
+- Added annotation-level forwarding support through `@Decorator()` constructor parameters
+
 ## 0.2.0+1
   - Fix README pub package shield to point to `decorator_annotation` instead of `decorator_gen`
 

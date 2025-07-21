@@ -6,13 +6,12 @@ A Dart code generator that automatically creates the [decorator pattern] for you
 
 The builder generates code if it finds classes with annotations from the [decorator_annotation] package.
 
+
 ## Features
 - Generate complete decorator classes with a single `@Decorator()` annotation
   - Forward all public members of the source class
   - Works with generics, records, nested types, etc.
-- Option to forward Object methods 
-  - automatically forwarded: `toString` , `==`, `hashCode`
-  - **not** automatically forwarded: `runtimeType` and `noSuchMethod` 
+  - Object methods can be forwarded globally or per class
 
 ## Installation
 Add the following to your `pubspec.yaml`:
@@ -125,19 +124,37 @@ class MixinService with SimpleMixin {
 // Generates: MixinServiceDecorator having mixinMethod and ownMethod 
 ```
 
-### Object methods
+
+### Object methods and Annotation-level Forwarding
+You can control which Object methods are forwarded **per class** using parameters on the `@Decorator()` annotation:
+
 ```dart
-@Decorator()
-class ObjectService {
-  @override
-  String toString() => 'Hello World!'; // included by default
+@Decorator(
+  forwardToString: true,         // forward toString (default: true)
+  forwardEquals: false,          // do NOT forward == (default: true)
+  forwardHashCode: true,         // forward hashCode (default: true)
+  forwardRuntimeType: true,      // forward runtimeType (default: false)
+  forwardNoSuchMethod: false,    // do NOT forward noSuchMethod (default: false)
+)
+class CustomService {
+  final String name;
+  CustomService(this.name);
 
   @override
-  Type get runtimeType => super.runtimeType; // excluded by default
+  String toString() => 'CustomService($name)';
+  @override
+  bool operator ==(Object other) => other is CustomService && other.name == name;
+  @override
+  int get hashCode => name.hashCode;
+  @override
+  Type get runtimeType => super.runtimeType;
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+  String processData(String data) => 'Processing: $data';
 }
-// Generates: ObjectServiceDecorator with forwarded toString only
-```
 
+// Only toString, hashCode, and runtimeType will be forwarded in the generated decorator.
+```
 
 ### Operators
 ```dart
@@ -172,9 +189,9 @@ class RecordService {
 // Generates: RecordServiceDecorator with tuple handling
 ```
 
-## Forwarding Object Methods
-If, and only if, you override Object methods in your class, 
-the generator **can** generate code that forwards these methods.
+
+## Forwarding Object Methods: Global Defaults
+If, and only if, you override Object methods in your class, the generator **can** generate code that forwards these methods.
 
 The following Object methods are **included** by default:
 - `toString`
@@ -185,8 +202,7 @@ The following Object methods are **excluded** by default:
 - `runtimeType`
 - `noSuchMethod`
 
-
-You can customize this behavior in your `build.yaml` file:
+You can customize the **global default** behavior in your `build.yaml` file:
 
 ```yaml
 targets:
