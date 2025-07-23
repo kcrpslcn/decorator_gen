@@ -191,7 +191,7 @@ class RecordService {
 
 
 ## Forwarding Object Methods: Global Defaults
-If, and only if, you override Object methods in your class, the generator **can** generate code that forwards these methods.
+The generator **can** generate code that forwards the Object methods.
 
 The following Object methods are **included** by default:
 - `toString`
