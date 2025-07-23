@@ -1,50 +1,59 @@
 import 'package:decorator_annotation/decorator_annotation.dart';
 import 'package:source_gen_test/annotations.dart';
 
-// Empty class - should generate minimal decorator
 @ShouldGenerate(r'''
-class OverridesDefaultIncludedMethodsDecorator
-    implements OverridesDefaultIncludedMethods {
-  final OverridesDefaultIncludedMethods overridesDefaultIncludedMethods;
+class OverridesDefaultIncludedMethodsReversedDecorator
+    implements OverridesDefaultIncludedMethodsReversed {
+  final OverridesDefaultIncludedMethodsReversed
+  overridesDefaultIncludedMethodsReversed;
 
-  OverridesDefaultIncludedMethodsDecorator({
-    required this.overridesDefaultIncludedMethods,
+  OverridesDefaultIncludedMethodsReversedDecorator({
+    required this.overridesDefaultIncludedMethodsReversed,
   });
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) {
+    return overridesDefaultIncludedMethodsReversed.noSuchMethod(invocation);
+  }
+
+  @override
+  Type get runtimeType => overridesDefaultIncludedMethodsReversed.runtimeType;
 }
 ''')
 @Decorator()
-class OverridesDefaultIncludedMethods {
+class OverridesDefaultIncludedMethodsReversed {
   @override
   String toString() => 'OverridesDefaultIncludedMethods';
 
   @override
-  bool operator ==(Object other) => other is OverridesDefaultIncludedMethods;
+  bool operator ==(Object other) =>
+      other is OverridesDefaultIncludedMethodsReversed;
 
   @override
   int get hashCode => 0;
 }
 
-// Empty class - should generate minimal decorator
 @ShouldGenerate(r'''
-class OverridesDefaultExcludedMethodsDecorator
-    implements OverridesDefaultExcludedMethods {
-  final OverridesDefaultExcludedMethods overridesDefaultExcludedMethods;
+class OverridesDefaultExcludedMethodsReversedDecorator
+    implements OverridesDefaultExcludedMethodsReversed {
+  final OverridesDefaultExcludedMethodsReversed
+  overridesDefaultExcludedMethodsReversed;
 
-  OverridesDefaultExcludedMethodsDecorator({
-    required this.overridesDefaultExcludedMethods,
+  OverridesDefaultExcludedMethodsReversedDecorator({
+    required this.overridesDefaultExcludedMethodsReversed,
   });
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
-    return overridesDefaultExcludedMethods.noSuchMethod(invocation);
+    return overridesDefaultExcludedMethodsReversed.noSuchMethod(invocation);
   }
 
   @override
-  Type get runtimeType => overridesDefaultExcludedMethods.runtimeType;
+  Type get runtimeType => overridesDefaultExcludedMethodsReversed.runtimeType;
 }
 ''')
 @Decorator()
-class OverridesDefaultExcludedMethods {
+class OverridesDefaultExcludedMethodsReversed {
   @override
   Type get runtimeType => super.runtimeType;
 

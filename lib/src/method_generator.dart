@@ -16,7 +16,7 @@ class MethodGenerator {
     // Get all methods that need to be implemented
     final allMethods = <MethodElement2>[];
 
-    // Add methods from the class itself (excluding static methods and Object methods)
+    // Add methods from the class itself (excluding static methods and ALL Object methods)
     allMethods.addAll(classElement.methods2.where((method) =>
         !method.isStatic && !decoratorUtils.isObjectMethod(method.name3!)));
 
@@ -165,7 +165,6 @@ class MethodGenerator {
   bool _isOperator(String methodName) {
     return methodName.startsWith('operator') ||
         [
-          '==',
           '+',
           '-',
           '*',
@@ -194,9 +193,6 @@ class MethodGenerator {
 
     // Special handling for specific operators
     switch (method.name3) {
-      case '==':
-        final param = method.formalParameters.first.name3;
-        return '$instanceName == $param';
       case '+':
       case '-':
       case '*':

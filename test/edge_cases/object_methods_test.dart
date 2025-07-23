@@ -45,6 +45,6 @@ const _expectedAnnotatedTests = {
 };
 
 const _expectedAnnotatedTestsWithReversedDefaults = {
-  'OverridesDefaultIncludedMethods',
-  'OverridesDefaultExcludedMethods',
+  'OverridesDefaultIncludedMethodsReversed',
+  'OverridesDefaultExcludedMethodsReversed',
 };

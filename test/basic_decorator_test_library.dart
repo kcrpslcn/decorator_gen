@@ -7,6 +7,23 @@ class EmptyClassDecorator implements EmptyClass {
   final EmptyClass emptyClass;
 
   EmptyClassDecorator({required this.emptyClass});
+
+  @override
+  String toString() {
+    return emptyClass.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is EmptyClassDecorator) {
+      return emptyClass == other.emptyClass;
+    }
+    return emptyClass == other;
+  }
+
+  @override
+  int get hashCode => emptyClass.hashCode;
 }
 ''')
 @Decorator()
@@ -23,6 +40,23 @@ class BasicClassDecorator implements BasicClass {
   void simpleMethod() {
     basicClass.simpleMethod();
   }
+
+  @override
+  String toString() {
+    return basicClass.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is BasicClassDecorator) {
+      return basicClass == other.basicClass;
+    }
+    return basicClass == other;
+  }
+
+  @override
+  int get hashCode => basicClass.hashCode;
 }
 ''')
 @Decorator()
@@ -51,6 +85,23 @@ class ClassWithMethodsDecorator implements ClassWithMethods {
   String methodWithParams(int a, String b) {
     return classWithMethods.methodWithParams(a, b);
   }
+
+  @override
+  String toString() {
+    return classWithMethods.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithMethodsDecorator) {
+      return classWithMethods == other.classWithMethods;
+    }
+    return classWithMethods == other;
+  }
+
+  @override
+  int get hashCode => classWithMethods.hashCode;
 }
 ''')
 @Decorator()
@@ -90,6 +141,23 @@ class ClassWithPropertiesDecorator implements ClassWithProperties {
   set writeOnlyValue(String value) {
     classWithProperties.writeOnlyValue = value;
   }
+
+  @override
+  String toString() {
+    return classWithProperties.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithPropertiesDecorator) {
+      return classWithProperties == other.classWithProperties;
+    }
+    return classWithProperties == other;
+  }
+
+  @override
+  int get hashCode => classWithProperties.hashCode;
 }
 ''')
 @Decorator()
@@ -124,6 +192,23 @@ class ClassWithStandaloneAccessorsDecorator
   set externalSetter(String value) {
     classWithStandaloneAccessors.externalSetter = value;
   }
+
+  @override
+  String toString() {
+    return classWithStandaloneAccessors.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithStandaloneAccessorsDecorator) {
+      return classWithStandaloneAccessors == other.classWithStandaloneAccessors;
+    }
+    return classWithStandaloneAccessors == other;
+  }
+
+  @override
+  int get hashCode => classWithStandaloneAccessors.hashCode;
 }
 ''')
 @Decorator()
@@ -153,6 +238,23 @@ class ClassWithConstructorDecorator implements ClassWithConstructor {
 
   @override
   String get optionalValue => classWithConstructor.optionalValue;
+
+  @override
+  String toString() {
+    return classWithConstructor.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithConstructorDecorator) {
+      return classWithConstructor == other.classWithConstructor;
+    }
+    return classWithConstructor == other;
+  }
+
+  @override
+  int get hashCode => classWithConstructor.hashCode;
 }
 ''')
 @Decorator()

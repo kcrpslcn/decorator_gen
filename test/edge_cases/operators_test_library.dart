@@ -87,20 +87,12 @@ class ComparisonOperatorsDecorator implements ComparisonOperators {
   }
 
   @override
-  bool operator ==(Object other) {
-    return comparisonOperators == other;
-  }
-
-  @override
   int compareTo(ComparisonOperators other) {
     return comparisonOperators.compareTo(other);
   }
 
   @override
   int get value => comparisonOperators.value;
-
-  @override
-  int get hashCode => comparisonOperators.hashCode;
 }
 ''')
 @Decorator()
@@ -113,13 +105,6 @@ class ComparisonOperators implements Comparable<ComparisonOperators> {
   bool operator <=(ComparisonOperators other) => value <= other.value;
   bool operator >(ComparisonOperators other) => value > other.value;
   bool operator >=(ComparisonOperators other) => value >= other.value;
-
-  @override
-  bool operator ==(Object other) =>
-      other is ComparisonOperators && value == other.value;
-
-  @override
-  int get hashCode => value.hashCode;
 
   @override
   int compareTo(ComparisonOperators other) => value.compareTo(other.value);

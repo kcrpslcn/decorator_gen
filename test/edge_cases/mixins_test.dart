@@ -15,7 +15,7 @@ Future<void> main() async {
   initializeBuildLogTracking();
   testAnnotatedElements<Decorator>(
     reader,
-    DecoratorGenerator(),
+    DecoratorGenerator.noObjectMethodForwarding(),
     expectedAnnotatedTests: _expectedAnnotatedTests,
   );
 }

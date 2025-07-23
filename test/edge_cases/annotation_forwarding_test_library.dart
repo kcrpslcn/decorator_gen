@@ -14,7 +14,7 @@ class ForwardToStringOnlyDecorator implements ForwardToStringOnly {
   }
 }
 ''')
-@Decorator(forwardToString: true, forwardEquals: false)
+@Decorator(forwardToString: true, forwardEquals: false, forwardHashCode: false)
 class ForwardToStringOnly {
   @override
   String toString() => 'ForwardToStringOnly';
@@ -37,6 +37,10 @@ class ForwardAllObjectMethodsDecorator implements ForwardAllObjectMethods {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ForwardAllObjectMethodsDecorator) {
+      return forwardAllObjectMethods == other.forwardAllObjectMethods;
+    }
     return forwardAllObjectMethods == other;
   }
 
@@ -122,6 +126,10 @@ class PartialForwardingDecorator implements PartialForwarding {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is PartialForwardingDecorator) {
+      return partialForwarding == other.partialForwarding;
+    }
     return partialForwarding == other;
   }
 

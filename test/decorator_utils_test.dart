@@ -13,19 +13,15 @@ void main() {
         decoratorUtils = DecoratorUtils();
       });
 
-      test('returns true for Object methods', () {
+      test('returns true for all Object methods', () {
+        expect(decoratorUtils.isObjectMethod('toString'), isTrue);
+        expect(decoratorUtils.isObjectMethod('hashCode'), isTrue);
+        expect(decoratorUtils.isObjectMethod('=='), isTrue);
         expect(decoratorUtils.isObjectMethod('runtimeType'), isTrue);
         expect(decoratorUtils.isObjectMethod('noSuchMethod'), isTrue);
       });
-      test(
-          'returns false (by default) for '
-          'toString, hashCode and == Object methods', () {
-        expect(decoratorUtils.isObjectMethod('toString'), isFalse);
-        expect(decoratorUtils.isObjectMethod('hashCode'), isFalse);
-        expect(decoratorUtils.isObjectMethod('=='), isFalse);
-      });
 
-      test('default behaviour can be overridden by providing options', () {
+      test('isObjectMethod is not affected by forwarding configuration', () {
         final decoratorUtils = DecoratorUtils(
           methodNameToIsForwarding: {
             'runtimeType': true,
@@ -36,8 +32,9 @@ void main() {
           },
         );
 
-        expect(decoratorUtils.isObjectMethod('runtimeType'), isFalse);
-        expect(decoratorUtils.isObjectMethod('noSuchMethod'), isFalse);
+        // isObjectMethod should always return true for Object methods regardless of forwarding config
+        expect(decoratorUtils.isObjectMethod('runtimeType'), isTrue);
+        expect(decoratorUtils.isObjectMethod('noSuchMethod'), isTrue);
         expect(decoratorUtils.isObjectMethod('toString'), isTrue);
         expect(decoratorUtils.isObjectMethod('hashCode'), isTrue);
         expect(decoratorUtils.isObjectMethod('=='), isTrue);
@@ -98,6 +95,62 @@ void main() {
       test('handles all lowercase strings', () {
         expect(DecoratorUtils.toCamelCase('class'), equals('class'));
         expect(DecoratorUtils.toCamelCase('service'), equals('service'));
+      });
+    });
+
+    group('getObjectMethodsToForward', () {
+      test('returns default forwarded methods when no configuration provided',
+          () {
+        final decoratorUtils = DecoratorUtils();
+        final forwardedMethods = decoratorUtils.getObjectMethodsToForward();
+
+        // Default behavior: toString, ==, hashCode should be forwarded
+        expect(forwardedMethods, containsAll(['toString', '==', 'hashCode']));
+        // Default behavior: runtimeType, noSuchMethod should NOT be forwarded
+        expect(forwardedMethods, isNot(contains('runtimeType')));
+        expect(forwardedMethods, isNot(contains('noSuchMethod')));
+
+        // Should only contain the 3 default forwarded methods
+        expect(forwardedMethods.length, equals(3));
+      });
+
+      test('respects methodNameToIsForwarding configuration', () {
+        final decoratorUtils = DecoratorUtils(
+          methodNameToIsForwarding: {
+            'toString': false,
+            '==': false,
+            'hashCode': false,
+            'runtimeType': true,
+            'noSuchMethod': true,
+          },
+        );
+        final forwardedMethods = decoratorUtils.getObjectMethodsToForward();
+
+        // Should forward: toString, hashCode, runtimeType
+        expect(forwardedMethods, isNot(contains('toString')));
+        expect(forwardedMethods, isNot(contains('==')));
+        expect(forwardedMethods, isNot(contains('hashCode')));
+        expect(forwardedMethods, contains('runtimeType'));
+        expect(forwardedMethods, contains('noSuchMethod'));
+
+        expect(forwardedMethods.length, equals(2));
+      });
+
+      test('ignores non-Object method entries in configuration', () {
+        final decoratorUtils = DecoratorUtils(
+          methodNameToIsForwarding: {
+            'customMethod': true, // Non-Object method, should be ignored
+            'someOtherMethod': false, // Non-Object method, should be ignored
+          },
+        );
+        final forwardedMethods = decoratorUtils.getObjectMethodsToForward();
+
+        // Should only consider Object methods
+        expect(forwardedMethods, isNot(contains('customMethod')));
+        expect(forwardedMethods, isNot(contains('someOtherMethod')));
+
+        // Should still include defaults for unconfigured Object methods
+        expect(forwardedMethods.length, equals(3));
       });
     });
   });
