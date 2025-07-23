@@ -21,4 +21,5 @@ targets:
             noSuchMethod: false # Defaults to false
         generate_for:
           exclude:
-            - "test/**"
+            - "test/edge_cases/**"
+            - "test/basic_decorator_test_library.dart"

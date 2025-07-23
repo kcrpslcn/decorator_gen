@@ -17,6 +17,11 @@ class OverridesDefaultIncludedMethodsDecorator
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is OverridesDefaultIncludedMethodsDecorator) {
+      return overridesDefaultIncludedMethods ==
+          other.overridesDefaultIncludedMethods;
+    }
     return overridesDefaultIncludedMethods == other;
   }
 
@@ -43,6 +48,11 @@ class OverridesDefaultExcludedMethodsDecorator
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is OverridesDefaultExcludedMethodsDecorator) {
+      return overridesDefaultExcludedMethods ==
+          other.overridesDefaultExcludedMethods;
+    }
     return overridesDefaultExcludedMethods == other;
   }
 

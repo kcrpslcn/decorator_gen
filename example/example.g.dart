@@ -23,6 +23,10 @@ class MyExampleClassDecorator implements MyExampleClass {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is MyExampleClassDecorator) {
+      return myExampleClass == other.myExampleClass;
+    }
     return myExampleClass == other;
   }
 

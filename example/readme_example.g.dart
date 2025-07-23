@@ -31,6 +31,10 @@ class MyServiceDecorator implements MyService {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is MyServiceDecorator) {
+      return myService == other.myService;
+    }
     return myService == other;
   }
 

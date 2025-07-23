@@ -38,9 +38,11 @@ class DecoratorBuilder {
     final typeParams = _typeParameterGenerator.generateTypeParameters();
     final typeRef = _typeParameterGenerator.generateTypeReference();
 
+    final resultingClassName = '${className}Decorator';
+
     // Generate class declaration
     buffer.writeln(
-      'class ${className}Decorator$typeParams implements $className$typeRef {',
+      'class $resultingClassName$typeParams implements $className$typeRef {',
     );
 
     // Generate field
@@ -48,7 +50,7 @@ class DecoratorBuilder {
     buffer.writeln();
 
     // Generate constructor
-    buffer.writeln('  ${className}Decorator({required this.$fieldName});');
+    buffer.writeln('  $resultingClassName({required this.$fieldName});');
     buffer.writeln();
 
     // Generate delegating methods
@@ -58,7 +60,9 @@ class DecoratorBuilder {
     buffer.write(_fieldAccessorGenerator.generateFieldAccessors());
 
     // Generate Object method forwarding based on configuration
-    buffer.write(_objectMethodGenerator.generateObjectMethods());
+    buffer.write(_objectMethodGenerator.generateObjectMethods(
+      className: resultingClassName,
+    ));
 
     buffer.writeln('}');
 

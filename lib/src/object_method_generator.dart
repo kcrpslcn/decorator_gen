@@ -9,7 +9,9 @@ class ObjectMethodGenerator {
 
   const ObjectMethodGenerator(this.classElement, this.decoratorUtils);
 
-  String generateObjectMethods() {
+  String generateObjectMethods({
+    required String className,
+  }) {
     final buffer = StringBuffer();
     final instanceName = DecoratorUtils.toCamelCase(classElement.name3!);
 
@@ -22,9 +24,12 @@ class ObjectMethodGenerator {
           buffer.writeln('    return $instanceName.toString();');
           buffer.writeln('  }');
           break;
-
         case '==':
           buffer.writeln('  bool operator ==(Object other) {');
+          buffer.writeln('    if (identical(this, other)) return true;');
+          buffer.writeln('    if (other is ${className}) {');
+          buffer.writeln('      return $instanceName == other.$instanceName;');
+          buffer.writeln('    }');
           buffer.writeln('    return $instanceName == other;');
           buffer.writeln('  }');
           break;

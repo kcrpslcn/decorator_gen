@@ -15,6 +15,10 @@ class EmptyClassDecorator implements EmptyClass {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is EmptyClassDecorator) {
+      return emptyClass == other.emptyClass;
+    }
     return emptyClass == other;
   }
 
@@ -44,6 +48,10 @@ class BasicClassDecorator implements BasicClass {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is BasicClassDecorator) {
+      return basicClass == other.basicClass;
+    }
     return basicClass == other;
   }
 
@@ -85,6 +93,10 @@ class ClassWithMethodsDecorator implements ClassWithMethods {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithMethodsDecorator) {
+      return classWithMethods == other.classWithMethods;
+    }
     return classWithMethods == other;
   }
 
@@ -137,6 +149,10 @@ class ClassWithPropertiesDecorator implements ClassWithProperties {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithPropertiesDecorator) {
+      return classWithProperties == other.classWithProperties;
+    }
     return classWithProperties == other;
   }
 
@@ -184,6 +200,10 @@ class ClassWithStandaloneAccessorsDecorator
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithStandaloneAccessorsDecorator) {
+      return classWithStandaloneAccessors == other.classWithStandaloneAccessors;
+    }
     return classWithStandaloneAccessors == other;
   }
 
@@ -226,6 +246,10 @@ class ClassWithConstructorDecorator implements ClassWithConstructor {
 
   @override
   bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    if (other is ClassWithConstructorDecorator) {
+      return classWithConstructor == other.classWithConstructor;
+    }
     return classWithConstructor == other;
   }
 
