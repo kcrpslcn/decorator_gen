@@ -23,4 +23,17 @@ class MyServiceDecorator implements MyService {
 
   @override
   String get name => myService.name;
+
+  @override
+  String toString() {
+    return myService.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return myService == other;
+  }
+
+  @override
+  int get hashCode => myService.hashCode;
 }

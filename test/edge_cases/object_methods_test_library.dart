@@ -1,7 +1,6 @@
 import 'package:decorator_annotation/decorator_annotation.dart';
 import 'package:source_gen_test/annotations.dart';
 
-// Empty class - should generate minimal decorator
 @ShouldGenerate(r'''
 class OverridesDefaultIncludedMethodsDecorator
     implements OverridesDefaultIncludedMethods {
@@ -26,18 +25,8 @@ class OverridesDefaultIncludedMethodsDecorator
 }
 ''')
 @Decorator()
-class OverridesDefaultIncludedMethods {
-  @override
-  String toString() => 'OverridesDefaultIncludedMethods';
+class OverridesDefaultIncludedMethods {}
 
-  @override
-  bool operator ==(Object other) => other is OverridesDefaultIncludedMethods;
-
-  @override
-  int get hashCode => 0;
-}
-
-// Empty class - should generate minimal decorator
 @ShouldGenerate(r'''
 class OverridesDefaultExcludedMethodsDecorator
     implements OverridesDefaultExcludedMethods {
@@ -46,6 +35,19 @@ class OverridesDefaultExcludedMethodsDecorator
   OverridesDefaultExcludedMethodsDecorator({
     required this.overridesDefaultExcludedMethods,
   });
+
+  @override
+  String toString() {
+    return overridesDefaultExcludedMethods.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return overridesDefaultExcludedMethods == other;
+  }
+
+  @override
+  int get hashCode => overridesDefaultExcludedMethods.hashCode;
 }
 ''')
 @Decorator()

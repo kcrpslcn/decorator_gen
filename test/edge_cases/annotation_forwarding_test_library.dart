@@ -14,7 +14,7 @@ class ForwardToStringOnlyDecorator implements ForwardToStringOnly {
   }
 }
 ''')
-@Decorator(forwardToString: true, forwardEquals: false)
+@Decorator(forwardToString: true, forwardEquals: false, forwardHashCode: false)
 class ForwardToStringOnly {
   @override
   String toString() => 'ForwardToStringOnly';

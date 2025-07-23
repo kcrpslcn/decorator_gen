@@ -10,6 +10,15 @@ class DecoratorGenerator extends GeneratorForAnnotation<Decorator> {
 
   const DecoratorGenerator({this.methodNameToIsForwarding = const {}});
 
+  const DecoratorGenerator.noObjectMethodForwarding()
+      : methodNameToIsForwarding = const {
+          'toString': false,
+          '==': false,
+          'hashCode': false,
+          'runtimeType': false,
+          'noSuchMethod': false,
+        };
+
   @override
   String generateForAnnotatedElement(
     Element2 element,

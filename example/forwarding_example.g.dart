@@ -12,17 +12,17 @@ class CustomServiceDecorator implements CustomService {
   CustomServiceDecorator({required this.customService});
 
   @override
-  String toString() {
-    return customService.toString();
-  }
-
-  @override
   String processData(String data) {
     return customService.processData(data);
   }
 
   @override
   String get name => customService.name;
+
+  @override
+  String toString() {
+    return customService.toString();
+  }
 
   @override
   int get hashCode => customService.hashCode;

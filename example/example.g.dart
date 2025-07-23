@@ -15,4 +15,17 @@ class MyExampleClassDecorator implements MyExampleClass {
   void foo() {
     myExampleClass.foo();
   }
+
+  @override
+  String toString() {
+    return myExampleClass.toString();
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return myExampleClass == other;
+  }
+
+  @override
+  int get hashCode => myExampleClass.hashCode;
 }
