@@ -15,7 +15,7 @@ topics:
 dependencies:
   analyzer: ^8.0.0
   build: ^4.0.0
-  decorator_annotation: ^0.3.0
+  decorator_annotation: ^0.5.0
   source_gen: ^4.0.0
 
 dev_dependencies:
