@@ -133,20 +133,23 @@ class NamedParameters {
     required bool flag,
     String prefix = 'default',
     int count = 0,
-  }) => '';
+  }) =>
+      '';
 
   Future<List<T>> method3<T>({
     required T item,
     int repeat = 1,
     bool validate = true,
     String? description,
-  }) async => [];
+  }) async =>
+      [];
 
   Map<String, dynamic> method4({
     String? optionalString,
     required List<int> requiredList,
     Map<String, bool>? optionalMap,
-  }) => {};
+  }) =>
+      {};
 }
 
 // Class with complex parameter combinations
@@ -207,13 +210,15 @@ class ComplexParameters {
     List<T> requiredList, [
     int? optionalPositional,
     String optionalWithDefault = 'default',
-  ]) async => {};
+  ]) async =>
+      {};
 
   Stream<U> mixedParameters<T, U>(
     T positionalRequired,
     List<T> positionalList, [
     Map<String, T>? optionalMap,
-  ]) => Stream.empty();
+  ]) =>
+      Stream.empty();
 
   void positionalNamedParameters(
     String positional,
@@ -286,5 +291,6 @@ class FunctionTypeParameters {
     List<T> items,
     U Function(T) mapper, [
     bool Function(T)? filter,
-  ]) => [];
+  ]) =>
+      [];
 }

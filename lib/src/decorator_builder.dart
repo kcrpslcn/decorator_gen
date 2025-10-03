@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import 'decorator_utils.dart';
 import 'field_accessor_generator.dart';
@@ -8,7 +8,7 @@ import 'type_parameter_generator.dart';
 
 /// Main class responsible for building decorator classes
 class DecoratorBuilder {
-  final ClassElement2 classElement;
+  final ClassElement classElement;
   final Map<String, bool> methodNameToIsForwarding;
   final StringBuffer buffer = StringBuffer();
 
@@ -33,7 +33,7 @@ class DecoratorBuilder {
 
   /// Generates the complete decorator class code
   String call() {
-    final className = classElement.name3!;
+    final className = classElement.name!;
     final fieldName = DecoratorUtils.toCamelCase(className);
     final typeParams = _typeParameterGenerator.generateTypeParameters();
     final typeRef = _typeParameterGenerator.generateTypeReference();

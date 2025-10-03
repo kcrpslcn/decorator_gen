@@ -1,11 +1,11 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import 'decorator_utils.dart';
 
 /// Handles generation of field accessors (getters and setters) for decorator classes
 class FieldAccessorGenerator {
-  final ClassElement2 classElement;
+  final ClassElement classElement;
   final DecoratorUtils decoratorUtils;
 
   FieldAccessorGenerator(this.classElement, this.decoratorUtils);
@@ -14,37 +14,36 @@ class FieldAccessorGenerator {
     final buffer = StringBuffer();
 
     // Collect all fields and accessors that need to be implemented
-    final allFields = <FieldElement2>[];
-    final allAccessors = <PropertyAccessorElement2>[];
+    final allFields = <FieldElement>[];
+    final allAccessors = <PropertyAccessorElement>[];
     final processedTypes = <String>{};
 
     void collectFieldsAndAccessors(InterfaceType interfaceType) {
-      final typeName = interfaceType.element3.name3!;
+      final typeName = interfaceType.element.name ?? '';
       if (processedTypes.contains(typeName)) return;
       processedTypes.add(typeName);
 
       // Add fields from this interface/class
-      for (final field in interfaceType.element3.fields2) {
+      for (final field in interfaceType.element.fields) {
         final isAccessible =
             !field.isPrivate || _isPrivateFieldAccessible(field);
         if (isAccessible &&
             !field.isStatic &&
-            !decoratorUtils.isObjectMethod(field.name3!) &&
-            !allFields.any((f) => f.name3 == field.name3)) {
+            !decoratorUtils.isObjectMethod(field.name ?? '') &&
+            !allFields.any((f) => f.name == field.name)) {
           allFields.add(field);
         }
       }
 
       // Add standalone accessors from this interface/class
-      for (final accessor in interfaceType.element3.getters2) {
+      for (final accessor in interfaceType.element.getters) {
         final isAccessible =
             !accessor.isPrivate || _isPrivateAccessorAccessible(accessor);
         if (isAccessible &&
             !accessor.isStatic &&
-            !decoratorUtils.isObjectMethod(accessor.name3!) &&
-            !decoratorUtils
-                .isObjectMethod(accessor.name3!.replaceAll('=', '')) &&
-            !allAccessors.any((a) => a.name3 == accessor.name3)) {
+            !decoratorUtils.isObjectMethod(accessor.name ?? '') &&
+            accessor.name != null &&
+            !decoratorUtils.isObjectMethod(accessor.name!)) {
           allAccessors.add(accessor);
         }
       }
@@ -56,29 +55,31 @@ class FieldAccessorGenerator {
 
       // Process superclass if it exists
       if (interfaceType.superclass != null &&
-          interfaceType.superclass!.element3.name3 != 'Object') {
+          interfaceType.superclass!.element.name != 'Object') {
         collectFieldsAndAccessors(interfaceType.superclass!);
       }
     }
 
     // Collect from the class itself (including accessible private members)
-    for (final field in classElement.fields2) {
+    for (final field in classElement.fields) {
       final isAccessible = !field.isPrivate || _isPrivateFieldAccessible(field);
       if (isAccessible &&
           !field.isStatic &&
-          !decoratorUtils.isObjectMethod(field.name3!)) {
+          !decoratorUtils.isObjectMethod(field.name!)) {
         allFields.add(field);
       }
     }
 
-    for (final accessor in classElement.getters2) {
+    for (final accessor in classElement.getters) {
       final isAccessible =
           !accessor.isPrivate || _isPrivateAccessorAccessible(accessor);
       if (isAccessible &&
           !accessor.isStatic &&
-          !decoratorUtils.isObjectMethod(accessor.name3!) &&
-          !decoratorUtils.isObjectMethod(accessor.name3!.replaceAll('=', ''))) {
-        allAccessors.add(accessor);
+          !decoratorUtils.isObjectMethod(accessor.name ?? '')) {
+        final name = accessor.name?.replaceAll('=', '') ?? '';
+        if (!decoratorUtils.isObjectMethod(name)) {
+          allAccessors.add(accessor);
+        }
       }
     }
 
@@ -94,7 +95,7 @@ class FieldAccessorGenerator {
 
     // Also process superclass if it's not Object
     if (classElement.supertype != null &&
-        classElement.supertype!.element3.name3 != 'Object') {
+        classElement.supertype!.element.name != 'Object') {
       collectFieldsAndAccessors(classElement.supertype!);
     }
 
@@ -108,41 +109,41 @@ class FieldAccessorGenerator {
 
   /// Checks if a private field is accessible from the decorator's context
   /// A private field is accessible if it's defined in the same library as the decorated class
-  bool _isPrivateFieldAccessible(FieldElement2 field) {
+  bool _isPrivateFieldAccessible(FieldElement field) {
     // Check if the field is defined in the same library as the class being decorated
-    final fieldLibrary = field.library2;
-    final classLibrary = classElement.library2;
+    final fieldLibrary = field.library;
+    final classLibrary = classElement.library;
     return fieldLibrary == classLibrary;
   }
 
   /// Checks if a private accessor is accessible from the decorator's context
   /// A private accessor is accessible if it's defined in the same library as the decorated class
-  bool _isPrivateAccessorAccessible(PropertyAccessorElement2 accessor) {
+  bool _isPrivateAccessorAccessible(PropertyAccessorElement accessor) {
     // Check if the accessor is defined in the same library as the class being decorated
-    final accessorLibrary = accessor.library2;
-    final classLibrary = classElement.library2;
+    final accessorLibrary = accessor.library;
+    final classLibrary = classElement.library;
     return accessorLibrary == classLibrary;
   }
 
-  void _generateFieldAccessor(StringBuffer buffer, FieldElement2 field) {
-    final instanceName = DecoratorUtils.toCamelCase(classElement.name3!);
+  void _generateFieldAccessor(StringBuffer buffer, FieldElement field) {
+    final instanceName = DecoratorUtils.toCamelCase(classElement.name ?? '');
 
     // For private fields, we need to generate getters and setters that delegate to the wrapped instance
     if (field.isPrivate && _isPrivateFieldAccessible(field)) {
       // Generate getter that delegates to the wrapped instance (if getter exists)
-      if (field.getter2 != null) {
+      if (field.getter != null) {
         buffer.writeln('  @override');
         buffer.writeln(
-          '  ${field.type} get ${field.name3} => $instanceName.${field.name3};',
+          '  ${field.type} get ${field.name} => $instanceName.${field.name};',
         );
         buffer.writeln();
       }
 
       // Generate setter that delegates to the wrapped instance (if setter exists and field is not final)
-      if (field.setter2 != null && !field.isFinal) {
+      if (field.setter != null && !field.isFinal) {
         buffer.writeln('  @override');
         buffer.writeln(
-          '  set ${field.name3}(${field.type} value) { $instanceName.${field.name3} = value; }',
+          '  set ${field.name}(${field.type} value) { $instanceName.${field.name} = value; }',
         );
         buffer.writeln();
       }
@@ -150,19 +151,19 @@ class FieldAccessorGenerator {
     }
 
     // Generate getter for public fields
-    if (field.getter2 != null && !field.getter2!.isPrivate) {
+    if (field.getter != null && !field.getter!.isPrivate) {
       buffer.writeln('  @override');
       buffer.writeln(
-        '  ${field.type} get ${field.name3} => $instanceName.${field.name3};',
+        '  ${field.type} get ${field.name} => $instanceName.${field.name};',
       );
       buffer.writeln();
     }
 
     // Generate setter if it exists for public fields
-    if (field.setter2 != null && !field.setter2!.isPrivate) {
+    if (field.setter != null && !field.setter!.isPrivate) {
       buffer.writeln('  @override');
       buffer.writeln(
-        '  set ${field.name3}(${field.type} value) { $instanceName.${field.name3} = value; }',
+        '  set ${field.name}(${field.type} value) { $instanceName.${field.name} = value; }',
       );
       buffer.writeln();
     }

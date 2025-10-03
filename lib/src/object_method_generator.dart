@@ -1,10 +1,10 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 
 import 'decorator_utils.dart';
 
 /// Handles generation of Object method forwarding for decorator classes
 class ObjectMethodGenerator {
-  final ClassElement2 classElement;
+  final ClassElement classElement;
   final DecoratorUtils decoratorUtils;
 
   const ObjectMethodGenerator(this.classElement, this.decoratorUtils);
@@ -13,7 +13,7 @@ class ObjectMethodGenerator {
     required String className,
   }) {
     final buffer = StringBuffer();
-    final instanceName = DecoratorUtils.toCamelCase(classElement.name3!);
+    final instanceName = DecoratorUtils.toCamelCase(classElement.name!);
 
     for (final methodName in decoratorUtils.getObjectMethodsToForward()) {
       buffer.writeln('  @override');
