@@ -1,4 +1,4 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:build/build.dart';
 import 'package:decorator_annotation/decorator_annotation.dart';
 import 'package:source_gen/source_gen.dart';
@@ -21,11 +21,11 @@ class DecoratorGenerator extends GeneratorForAnnotation<Decorator> {
 
   @override
   String generateForAnnotatedElement(
-    Element2 element,
+    Element element,
     ConstantReader annotation,
     BuildStep buildStep,
   ) {
-    if (element is! ClassElement2) {
+    if (element is! ClassElement) {
       throw InvalidGenerationSourceError(
         'Generator can only be applied to classes.',
         element: element,

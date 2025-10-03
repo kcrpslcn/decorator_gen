@@ -187,17 +187,21 @@ class NestedRecordsDecorator implements NestedRecords {
 ''')
 @Decorator()
 class NestedRecords {
-  (({String name, int id}), ({bool active, List<String> permissions}))
-  getUserWithPermissions() =>
+  (
+    ({String name, int id}),
+    ({bool active, List<String> permissions})
+  ) getUserWithPermissions() =>
       ((name: 'user', id: 1), (active: true, permissions: ['read']));
 
   Future<(T, {String message, bool success})> processGeneric<T>(T data) async =>
       (data, message: 'ok', success: true);
 
-  ({String category, (int count, {String unit, bool isMetric}) measurement})
-  getComplexData() =>
+  ({
+    String category,
+    (int count, {String unit, bool isMetric}) measurement
+  }) getComplexData() =>
       (category: 'test', measurement: (10, unit: 'kg', isMetric: true));
 
   Stream<(String, {DateTime timestamp, Map<String, dynamic> metadata})>
-  getEventStream() => Stream.empty();
+      getEventStream() => Stream.empty();
 }

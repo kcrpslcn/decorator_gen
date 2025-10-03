@@ -186,11 +186,8 @@ class GenericWithComplexConstraintsDecorator<
 }
 ''')
 @Decorator()
-class GenericWithComplexConstraints<
-  T extends Comparable<T>,
-  U extends Iterable<T>,
-  V extends Map<T, U>
-> {
+class GenericWithComplexConstraints<T extends Comparable<T>,
+    U extends Iterable<T>, V extends Map<T, U>> {
   T findMinInCollection(U collection) => throw UnimplementedError();
 
   V filterMap(V map, bool Function(T) predicate) => throw UnimplementedError();

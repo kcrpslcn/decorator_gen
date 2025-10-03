@@ -1,3 +1,8 @@
+## 0.5.0
+- Require `analyzer: ^8.0.0`
+- Require `build: ^4.0.0`
+- Require `source_gen: ^4.0.0`
+
 ## 0.4.0
 - Object methods are now forwarded even if they are not overridden
   - still respects the global or local settings for overriding

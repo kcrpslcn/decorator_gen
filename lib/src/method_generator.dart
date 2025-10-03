@@ -1,11 +1,11 @@
-import 'package:analyzer/dart/element/element2.dart';
+import 'package:analyzer/dart/element/element.dart';
 import 'package:analyzer/dart/element/type.dart';
 
 import 'decorator_utils.dart';
 
 /// Handles generation of delegating methods for decorator classes
 class MethodGenerator {
-  final ClassElement2 classElement;
+  final ClassElement classElement;
   final DecoratorUtils decoratorUtils;
 
   const MethodGenerator(this.classElement, this.decoratorUtils);
@@ -14,32 +14,33 @@ class MethodGenerator {
     final buffer = StringBuffer();
 
     // Get all methods that need to be implemented
-    final allMethods = <MethodElement2>[];
+    final allMethods = <MethodElement>[];
 
     // Add methods from the class itself (excluding static methods and ALL Object methods)
-    allMethods.addAll(classElement.methods2.where((method) =>
-        !method.isStatic && !decoratorUtils.isObjectMethod(method.name3!)));
+    allMethods.addAll(classElement.methods.where((method) =>
+        !method.isStatic &&
+        method.name != null &&
+        !decoratorUtils.isObjectMethod(method.name!)));
 
-    // Add abstract methods from directly implemented interfaces only
     final processedTypes = <String>{};
 
     void collectAbstractMethods(InterfaceType interfaceType) {
-      final typeName = interfaceType.element3.name3!;
+      final typeName = interfaceType.element.name ?? '';
       if (processedTypes.contains(typeName)) return;
       processedTypes.add(typeName);
 
       // Add methods from this interface only if they are abstract
-      for (final method in interfaceType.methods2) {
-        if (!method.isStatic &&
-            !decoratorUtils.isObjectMethod(method.name3!) &&
-            !allMethods.any((m) => m.name3 == method.name3)) {
-          // Only add methods that are not already implemented in the current class
-          final isImplementedInClass = classElement.methods2.any(
-            (m) => m.name3 == method.name3 && !m.isAbstract,
-          );
-
-          if (!isImplementedInClass) {
-            allMethods.add(method);
+      for (final method in interfaceType.methods) {
+        if (method.name != null) {
+          if (!method.isStatic &&
+              !decoratorUtils.isObjectMethod(method.name!) &&
+              !allMethods.any((m) => m.name == method.name)) {
+            // Only add methods that are not already implemented in the current class
+            if (!classElement.methods.any(
+              (m) => m.name == method.name && !m.isAbstract,
+            )) {
+              allMethods.add(method);
+            }
           }
         }
       }
@@ -51,7 +52,7 @@ class MethodGenerator {
 
       // Process superclass if it exists
       if (interfaceType.superclass != null &&
-          interfaceType.superclass!.element3.name3 != 'Object') {
+          interfaceType.superclass!.element.name != 'Object') {
         collectAbstractMethods(interfaceType.superclass!);
       }
     }
@@ -68,7 +69,7 @@ class MethodGenerator {
 
     // Also process superclass if it's not Object
     if (classElement.supertype != null &&
-        classElement.supertype!.element3.name3 != 'Object') {
+        classElement.supertype!.element.name != 'Object') {
       collectAbstractMethods(classElement.supertype!);
     }
 
@@ -76,21 +77,20 @@ class MethodGenerator {
       buffer.writeln('  @override');
 
       // Generate type parameters
-      final typeParams = method.typeParameters2.isNotEmpty
-          ? '<${method.typeParameters2.map((tp) {
+      final typeParams = method.typeParameters.isNotEmpty
+          ? '<${method.typeParameters.map((tp) {
               final bound = tp.bound;
-              return bound != null ? '${tp.name3} extends $bound' : tp.name3;
+              return bound != null ? '${tp.name} extends $bound' : tp.name;
             }).join(', ')}>'
           : '';
 
       // Check if this is an operator
-      final isOperator = _isOperator(method.name3!);
-      final methodPrefix = isOperator && !method.name3!.startsWith('operator')
-          ? 'operator '
-          : '';
+      final isOperator = _isOperator(method.name!);
+      final methodPrefix =
+          isOperator && !method.name!.startsWith('operator') ? 'operator ' : '';
 
       // Handle special case for unary minus operator
-      final methodName = method.name3 == 'unary-' ? '-' : method.name3;
+      final methodName = method.name == 'unary-' ? '-' : method.name;
 
       buffer.write(
         '  ${method.returnType} $methodPrefix$methodName$typeParams(',
@@ -104,9 +104,9 @@ class MethodGenerator {
       // Generate method body
       final paramNames = method.formalParameters.map((p) {
         if (p.isNamed) {
-          return '${p.name3}: ${p.name3}';
+          return '${p.name}: ${p.name}';
         } else {
-          return p.name3;
+          return p.name;
         }
       }).join(', ');
 
@@ -126,14 +126,14 @@ class MethodGenerator {
     return buffer.toString();
   }
 
-  String _generateParameters(MethodElement2 method) {
+  String _generateParameters(MethodElement method) {
     final requiredParams = <String>[];
     final namedParams = <String>[];
     final optionalParams = <String>[];
 
     for (final param in method.formalParameters) {
       final type = param.type;
-      final name = param.name3;
+      final name = param.name;
       final defaultValue = param.defaultValueCode;
 
       if (param.isNamed) {
@@ -188,13 +188,19 @@ class MethodGenerator {
         ].contains(methodName);
   }
 
-  String _generateMethodCall(MethodElement2 method, String paramNames) {
-    final instanceName = DecoratorUtils.toCamelCase(classElement.name3!);
+  String _generateMethodCall(MethodElement method, String paramNames) {
+    final instanceName = DecoratorUtils.toCamelCase(classElement.name ?? '');
 
     // Special handling for specific operators
-    switch (method.name3) {
-      case '+':
+    switch (method.name ?? '') {
       case '-':
+        if (method.formalParameters.isNotEmpty) {
+          final param = method.formalParameters.first.name ?? '';
+          return '$instanceName ${method.name} $param';
+        } else {
+          return '-$instanceName';
+        }
+      case '+':
       case '*':
       case '/':
       case '%':
@@ -209,21 +215,19 @@ class MethodGenerator {
       case '<<':
       case '>>':
       case '>>>':
-        final param = method.formalParameters.first.name3;
-        return '$instanceName ${method.name3} $param';
+        final param = method.formalParameters.first.name ?? '';
+        return '$instanceName ${method.name} $param';
       case '[]':
-        final param = method.formalParameters.first.name3;
+        final param = method.formalParameters.first.name ?? '';
         return '$instanceName[$param]';
       case '[]=':
-        final params = method.formalParameters.map((p) => p.name3).toList();
+        final params = method.formalParameters.map((p) => p.name).toList();
         return '$instanceName[${params[0]}] = ${params[1]}';
       case '~':
         return '~$instanceName';
-      case 'unary-':
-        return '-$instanceName';
       default:
         // Regular method call
-        return '$instanceName.${method.name3}($paramNames)';
+        return '$instanceName.${method.name}($paramNames)';
     }
   }
 }
