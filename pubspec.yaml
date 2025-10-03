@@ -1,8 +1,7 @@
 name: decorator_gen
-version: 0.4.0
+version: 0.5.0
 description: >-
-  Automatically generates code for the decorator pattern in Dart by annotating
-  Dart classes.
+  Automatically generates code for the decorator pattern in Dart by annotating classes.
 repository: https://github.com/kcrpslcn/decorator_gen
 environment:
   sdk: ^3.0.0
@@ -10,6 +9,8 @@ environment:
 topics:
   - build-runner
   - codegen
+  - decorator
+  - design-pattern
 
 dependencies:
   analyzer: ^8.0.0
