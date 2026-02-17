@@ -1,3 +1,6 @@
+## 1.0.0
+- Require `analyzer: ^10.0.0`
+
 ## 0.5.0
 - Require `analyzer: ^8.0.0`
 - Require `build: ^4.0.0`
